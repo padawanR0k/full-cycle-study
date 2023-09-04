@@ -4,6 +4,7 @@
 ### NextJS ###
 # dependencies
 /node_modules
+*/**/node_modules
 /.pnp
 .pnp.js
 
@@ -41,17 +42,17 @@ next-env.d.ts
 
 ## backend
 # compiled output
-/dist
+packages/backend/dist
 
 # Logs
-logs
-*.log
+packages/backendlogs
+packages/backend*.log
 pnpm-debug.log*
 lerna-debug.log*
 
 
 # Tests
-/coverage*
+packages/backend/coverage*
 /.nyc_output
 
 # IDEs and editors
