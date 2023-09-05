@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { BlogModule } from './blog/blog.module';
 import appConfig from "./config/app.config";
 
 
@@ -17,7 +18,8 @@ import appConfig from "./config/app.config";
       isGlobal: true,
       ignoreEnvFile: false,
       load: [appConfig],
-    })
+    }),
+    BlogModule
   ],
   controllers: [AppController],
   providers: [AppService],
