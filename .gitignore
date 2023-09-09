@@ -76,3 +76,6 @@ junit-*.xml
 
 # MikroORM
 /temp
+
+# docker
+pgdata
