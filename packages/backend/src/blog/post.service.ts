@@ -10,11 +10,13 @@ export class PostService {
     private readonly blogRepository: EntityRepository<Post>,
   ) {}
 
-  create() {
-    const blog = new Post();
-    blog.title = 'My First Post';
-    blog.content = 'Hello World!';
-    return this.blogRepository.create(blog);
+  async create(title: string, content: string) {
+    const post = new Post();
+    post.title = title;
+    post.content = content;
+    const newPost = this.blogRepository.create(post);
+    await this.blogRepository.getEntityManager().persistAndFlush(newPost);
+    return newPost;
   }
 
   findAll() {
