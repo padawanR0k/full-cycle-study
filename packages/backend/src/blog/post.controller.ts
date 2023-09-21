@@ -23,8 +23,8 @@ export class PostController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateBlogDto: UpdatePostDto) {
-    return this.postService.update(+id, updateBlogDto);
+  update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
+    return this.postService.update(+id, updatePostDto);
   }
 
   // @Delete(':id')
