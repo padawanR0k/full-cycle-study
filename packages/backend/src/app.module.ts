@@ -28,6 +28,7 @@ import { MikroOrmModule } from '@mikro-orm/nestjs';
       type: 'postgresql',
       password: 'postgres',
       user: 'postgres',
+      debug: true,
     }),
     PostModule,
   ],

@@ -1,6 +1,7 @@
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityRepository } from '@mikro-orm/postgresql';
 import { Injectable } from '@nestjs/common';
+import { UpdatePostDto } from './dto/update-post.dto';
 import { Post } from './entities/post.entity';
 
 @Injectable()
@@ -27,12 +28,18 @@ export class PostService {
     return this.blogRepository.findOne({ id });
   }
 
-  // update(id: number, updatePostDto: UpdatePostDto) {
-  //   const blog = this.blogRepository.findOne({ id });
-  //   if (!blog) {
-  //     return null;
-  //   }
-  // }
+  async update(id: number, updatePostDto: UpdatePostDto) {
+    const blog = await this.blogRepository.findOne({ id });
+    if (!blog) {
+      return null;
+    }
+    console.log(updatePostDto);
+    blog.content = updatePostDto.content;
+    blog.title = updatePostDto.title;
+    await this.blogRepository.getEntityManager().persistAndFlush(blog);
+    return blog;
+  }
+
   //
   // remove(id: number) {
   //   return `This action removes a #${id} blog`;
