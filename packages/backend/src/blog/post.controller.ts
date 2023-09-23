@@ -10,6 +10,7 @@ import {
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { PostService } from './post.service';
+import { ResponseEntity } from '../../libs/common-config/src/ResponseEntity';
 
 @Controller('post')
 export class PostController {
@@ -21,22 +22,34 @@ export class PostController {
   }
 
   @Get()
-  findAll() {
-    return this.postService.findAll();
+  async findAll() {
+    const posts = await this.postService.findAll();
+    return ResponseEntity.OK_WITH(posts);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.postService.findOne(+id);
+    const post = this.postService.findOne(+id);
+    return ResponseEntity.OK_WITH(post);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
-    return this.postService.update(+id, updatePostDto);
+  async update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
+    try {
+      await this.postService.update(+id, updatePostDto);
+      return ResponseEntity.OK();
+    } catch (e) {
+      throw new Error('post update 실패');
+    }
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.postService.remove(+id);
+  async remove(@Param('id') id: string) {
+    try {
+      await this.postService.remove(+id);
+      return ResponseEntity.OK();
+    } catch (e) {
+      throw new Error('post delete 실패');
+    }
   }
 }

@@ -17,5 +17,10 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false
+  },
+  "paths": {
+    "@app/common-config": [
+      "libs/common-config/src"
+    ]
   }
 }
