@@ -33,15 +33,23 @@ export class PostService {
     if (!post) {
       return null;
     }
-    console.log(updatePostDto);
     post.content = updatePostDto.content;
     post.title = updatePostDto.title;
     await this.postRepository.getEntityManager().persistAndFlush(post);
     return post;
   }
 
-  //
-  // remove(id: number) {
-  //   return `This action removes a #${id} post`;
-  // }
+  async remove(id: number) {
+    const post = await this.postRepository.findOne({ id });
+
+    if (!post) {
+      return null;
+    }
+
+    post.deletedAt = new Date();
+
+    await this.postRepository.getEntityManager().persistAndFlush(post);
+
+    return post;
+  }
 }

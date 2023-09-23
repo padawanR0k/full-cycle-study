@@ -8,4 +8,7 @@ export class Post extends BaseEntity {
 
   @Property()
   content: string;
+
+  @Property()
+  deletedAt: Date = new Date();
 }
