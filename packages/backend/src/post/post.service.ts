@@ -30,7 +30,7 @@ export class PostService {
   async update(id: number, updatePostDto: UpdatePostDto) {
     const post = await this.postRepository.findOnePost(id);
     if (!post) {
-      return null;
+      throw Error('존재하지 않는 포스트입니다.');
     }
 
     return this.postRepository.updatePost(post, updatePostDto);
@@ -40,7 +40,7 @@ export class PostService {
     const post = await this.postRepository.findOnePost(id);
 
     if (!post) {
-      return null;
+      throw Error('존재하지 않는 포스트입니다.');
     }
 
     return this.postRepository.removePost(post);
