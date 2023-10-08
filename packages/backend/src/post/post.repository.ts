@@ -16,7 +16,7 @@ export class PostRepository {
   }
 
   findOnePost(id: number) {
-    return this.postRepository.findOne({ id });
+    return this.postRepository.findOne({ id, deletedAt: null });
   }
 
   async removePost(post: Post) {
@@ -36,6 +36,7 @@ export class PostRepository {
     const post = new Post();
     post.title = createDto.title;
     post.content = createDto.content;
+    await this.postRepository.persistAndFlush(post);
     return post;
   }
 }

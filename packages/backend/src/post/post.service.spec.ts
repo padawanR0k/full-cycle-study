@@ -2,11 +2,13 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { PostService } from './post.service';
 import { TestDbConfig } from '../../test/test-db.config';
 import { PostRepository } from './post.repository';
-import { MikroORM } from '@mikro-orm/core';
+import { EntityManager, MikroORM } from '@mikro-orm/core';
 import { PostModule } from './post.module';
+import { Post } from './entities/post.entity';
 
 describe('PostService', () => {
   let service: PostService;
+  let em: EntityManager;
   let orm: MikroORM;
 
   beforeAll(async () => {
@@ -15,7 +17,6 @@ describe('PostService', () => {
       providers: [PostService, PostRepository],
     }).compile();
 
-    service = module.get<PostService>(PostService);
     /**
      * NOTE
      * orm = MikroORM
@@ -26,6 +27,8 @@ describe('PostService', () => {
      * DB 스키마 초기화(새로고침)
      */
     await orm.getSchemaGenerator().refreshDatabase();
+    service = module.get<PostService>(PostService);
+    em = orm.em.fork();
   });
 
   afterAll(async () => await orm.close(true));
@@ -48,5 +51,56 @@ describe('PostService', () => {
     const postId = 1;
 
     await expect(service.remove(postId)).rejects.toThrow();
+  });
+
+  it('post 목록 조회시 삭제된 post는 조회되지 않아야한다.', async () => {
+    // given
+    const createPostDto = {
+      title: 'test',
+      content: 'test',
+      deletedAt: '2023-01-01 00:00:00',
+    };
+
+    const newPost = em.create(Post, createPostDto);
+    await em.persistAndFlush(newPost);
+
+    // when
+    const posts = await service.findAll();
+
+    // then
+    expect(posts.length).toBe(0);
+  });
+
+  it('post 상세 조회시 삭제된 post는 조회되지 않아야한다.', async () => {
+    // given
+    const createPostDto = {
+      title: 'test',
+      content: 'test',
+      deletedAt: '2023-01-01 00:00:00',
+    };
+
+    const newPost = em.create(Post, createPostDto);
+    await em.persistAndFlush(newPost);
+
+    // when, then
+    await expect(service.findOne(newPost.id)).rejects.toThrow();
+  });
+
+  it('post 목록 조회시 삭제되지 않은 post는 조회된다.', async () => {
+    // given
+    const createPostDto = {
+      title: 'test',
+      content: 'test',
+    };
+
+    const newPost = em.create(Post, createPostDto);
+    await em.persistAndFlush(newPost);
+    console.log('왜 안만들어짐??', await em.find(Post, {}));
+
+    // when
+    const posts = await service.findAll();
+
+    // then
+    expect(posts.length).toBe(1);
   });
 });
