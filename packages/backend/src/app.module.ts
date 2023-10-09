@@ -2,9 +2,9 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { PostModule } from './blog/post.module';
 import appConfig from './config/app.config';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
+import { PostModule } from './post/post.module';
 
 @Module({
   imports: [

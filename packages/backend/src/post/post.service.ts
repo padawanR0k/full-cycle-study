@@ -14,8 +14,7 @@ export class PostService {
   ) {}
 
   async create(createDto: CreatePostDto) {
-    const newPost = this.postRepository.createPost(createDto);
-    await this.em.persistAndFlush(newPost);
+    const newPost = await this.postRepository.createPost(createDto);
     return newPost;
   }
 
@@ -23,14 +22,18 @@ export class PostService {
     return this.postRepository.findAllPost();
   }
 
-  findOne(id: number) {
-    return this.postRepository.findOnePost(id);
+  async findOne(id: number) {
+    const post = await this.postRepository.findOnePost(id);
+    if (!post) {
+      throw Error('존재하지 않는 포스트입니다.');
+    }
+    return post;
   }
 
   async update(id: number, updatePostDto: UpdatePostDto) {
     const post = await this.postRepository.findOnePost(id);
     if (!post) {
-      return null;
+      throw Error('존재하지 않는 포스트입니다.');
     }
 
     return this.postRepository.updatePost(post, updatePostDto);
@@ -40,7 +43,7 @@ export class PostService {
     const post = await this.postRepository.findOnePost(id);
 
     if (!post) {
-      return null;
+      throw Error('존재하지 않는 포스트입니다.');
     }
 
     return this.postRepository.removePost(post);

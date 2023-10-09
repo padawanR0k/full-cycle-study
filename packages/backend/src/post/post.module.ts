@@ -9,5 +9,6 @@ import { PostRepository } from './post.repository';
   imports: [MikroOrmModule.forFeature([Post])],
   controllers: [PostController],
   providers: [PostService, PostRepository],
+  exports: [MikroOrmModule],
 })
 export class PostModule {}
