@@ -24,15 +24,17 @@ describe('PostService', () => {
     orm = module.get<MikroORM>(MikroORM);
     /**
      * NOTE
-     * DB 스키마 초기화(새로고침)
+     * DB 스키마 초기화(새로고침) - 테이블 스키마를 생성해준다.
      */
     await orm.getSchemaGenerator().refreshDatabase();
     service = module.get<PostService>(PostService);
-    em = orm.em.fork();
+    em = orm.em;
   });
 
+  // 연결을 끊는다
   afterAll(async () => await orm.close(true));
 
+  // 테스트마다 테이블을 비운다.
   beforeEach(async () => await orm.getSchemaGenerator().clearDatabase());
 
   it('업데이트하려는 post가 없는 경우 오류가 발생해야한다.', async () => {
@@ -89,15 +91,13 @@ describe('PostService', () => {
   it('post 목록 조회시 삭제되지 않은 post는 조회된다.', async () => {
     // given
     const createPostDto = {
-      title: 'test',
-      content: 'test',
+      title: 'ASDASDSA',
+      content: 'ASDASD',
     };
 
-    const newPost = em.create(Post, createPostDto);
-    await em.persistAndFlush(newPost);
-    console.log('왜 안만들어짐??', await em.find(Post, {}));
+    await service.create(createPostDto);
 
-    // when
+    // when;
     const posts = await service.findAll();
 
     // then

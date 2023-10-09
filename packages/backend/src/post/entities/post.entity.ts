@@ -14,5 +14,5 @@ export class Post extends BaseEntity {
   content: string;
 
   @Property({ nullable: true })
-  deletedAt: Date = new Date();
+  deletedAt: Date = null;
 }

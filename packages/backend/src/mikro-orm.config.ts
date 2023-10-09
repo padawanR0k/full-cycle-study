@@ -1,4 +1,4 @@
-import { Post } from './blog/entities/post.entity';
+import { Post } from './post/entities/post.entity';
 
 export default {
   entities: [Post], // no need for `entitiesTs` this way
