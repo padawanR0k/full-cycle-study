@@ -28,7 +28,7 @@ describe('PostService', () => {
      */
     await orm.getSchemaGenerator().refreshDatabase();
     service = module.get<PostService>(PostService);
-    em = orm.em;
+    em = orm.em.fork();
   });
 
   // 연결을 끊는다

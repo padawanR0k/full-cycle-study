@@ -28,16 +28,16 @@ export class PostController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    const post = this.postService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    const post = await this.postService.findOne(+id);
     return ResponseEntity.OK_WITH(post);
   }
 
   @Patch(':id')
   async update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
     try {
-      await this.postService.update(+id, updatePostDto);
-      return ResponseEntity.OK();
+      const post = await this.postService.update(+id, updatePostDto);
+      return ResponseEntity.OK_WITH(post);
     } catch (e) {
       throw new Error('post update 실패');
     }
@@ -46,8 +46,8 @@ export class PostController {
   @Delete(':id')
   async remove(@Param('id') id: string) {
     try {
-      await this.postService.remove(+id);
-      return ResponseEntity.OK();
+      const post = await this.postService.remove(+id);
+      return ResponseEntity.OK_WITH(post);
     } catch (e) {
       throw new Error('post delete 실패');
     }
